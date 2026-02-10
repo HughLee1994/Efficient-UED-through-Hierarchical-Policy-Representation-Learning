@@ -1,12 +1,6 @@
-# Enhancing Hierarchical Environment Design via Generative Trajectory Modeling
+# Efficient Unsupervised Environment Design through Hierarchical Policy Representation Learning
 
 [![arXiv](https://img.shields.io/badge/arXiv-2310.00301-b31b1b.svg)](https://arxiv.org/abs/2310.00301)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-
-Code for **"Enhancing the Hierarchical Environment Design via Generative Trajectory Modeling"**.
-
-Note: The detailed code will come out later.
-
 
 ## 📋 Overview
 
@@ -136,19 +130,30 @@ hierarchical-ued-gtm/
 └── README.md
 ```
 
-## 🔬 Experiments
+## 🏃‍♂️ Run Commands
 
-To reproduce the paper results:
+### 1. **Random Training**:
 
 ```bash
-# Run main experiments
-python experiments/run_experiments.py --config configs/main_experiment.yaml
+CUDA_VISIBLE_DEVICES=0 python train.py --seed 91 --num_budget 20 --num_udpates_per_env 50 --buffer_size 10000 --cv False --newMDP False --gamma 1 --domain_randomization True --accel False --cv False --num_env 2 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion False --num_eval_envs 10
+```
 
-# Run ablation studies
-python experiments/run_experiments.py --config configs/ablation.yaml
+### 2. **Accel Training**:
 
-# Generate plots
-python experiments/plot_results.py --results_dir results/
+```bash
+CUDA_VISIBLE_DEVICES=1 python train.py --seed 91 --num_budget 20 --num_udpates_per_env 50 --buffer_size 10000 --cv False --newMDP False --gamma 1 --domain_randomization False --accel True --cv False --num_env 2 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion False --num_eval_envs 10
+```
+
+### 3. **New MDP Training**:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python train.py --seed 91 --num_budget 20 --num_udpates_per_env 50 --buffer_size 10000 --cv False --newMDP True --gamma 1 --domain_randomization False --accel False --cv False --num_env 5 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion False --num_eval_envs 10
+```
+
+### 4. **Shed Training**:
+
+```bash
+CUDA_VISIBLE_DEVICES=2 python train.py --seed 95 --num_budget 50 --num_udpates_per_env 20 --buffer_size 2048 --cv False --newMDP True --gamma 1 --domain_randomization False --accel False --cv False --num_env 5 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion True --num_eval_envs 10
 ```
 
 ## 📖 Citation
