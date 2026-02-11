@@ -18,7 +18,7 @@ This repository presents a novel hierarchical MDP framework for **Unsupervised E
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/hierarchical-ued-gtm.git
+git clone [https://github.com/yourusername/hierarchical-ued-gtm.git](https://github.com/HughLee1994/Efficient-UED-through-Hierarchical-Policy-Representation-Learning)
 cd hierarchical-ued-gtm
 
 # Create a virtual environment
@@ -29,131 +29,40 @@ conda activate ued-gtm
 pip install -r requirements.txt
 ```
 
-## 🚀 Quick Start
+## 🧩 Hierarchical MDP Architecture
 
-### Training the Teacher-Student Framework
+<p align="center">
+  <img src="assets/h-mdp-new.png" width="700"><br>
+  <em>Figure 1: The overall framework of SHED. SHED uses student’s performance on select evaluation environments as its state to suggest the next appropriate challenge for students to train in.</em>
+</p>
 
-```python
-from ued_gtm import TeacherAgent, StudentAgent, HierarchicalTrainer
 
-# Initialize teacher and student agents
-teacher = TeacherAgent(obs_dim=..., action_dim=...)
-student = StudentAgent(obs_dim=..., action_dim=...)
 
-# Create hierarchical trainer
-trainer = HierarchicalTrainer(
-    teacher=teacher,
-    student=student,
-    max_environments=1000,  # Resource constraint
-    curriculum_strategy='frontier'
-)
-
-# Train
-trainer.train(num_iterations=10000)
-```
-
-### Generating Environments
-
-```python
-# Generate environments based on student's current capabilities
-environments = teacher.generate_environments(
-    student_representation=student.get_representation(),
-    num_envs=10,
-    difficulty_level='frontier'
-)
-```
-
-### Evaluating Zero-Shot Transfer
-
-```python
-from ued_gtm import evaluate_transfer
-
-# Evaluate on held-out test environments
-results = evaluate_transfer(
-    agent=student,
-    test_envs=test_environment_set,
-    num_episodes=100
-)
-
-print(f"Transfer Success Rate: {results['success_rate']:.2%}")
-```
-
-## 📊 Methodology
-
-### Hierarchical MDP Framework
-
-Our approach formulates environment design as a hierarchical Markov Decision Process:
-
-- **Upper-Level (Teacher)**: Observes student policy representations and generates suitable training environments
-- **Lower-Level (Student)**: Learns to solve the generated environments and develops general capabilities
-
-### Generative Trajectory Modeling
-
-The teacher agent uses trajectory modeling to:
-1. Analyze student's performance patterns across different environments
-2. Identify the frontier of student's capabilities
-3. Generate new environments that challenge the student appropriately
-4. Reuse and recombine structures from previously successful environments
-
-## 📈 Results
-
-Our method demonstrates significant improvements over baseline UED approaches:
-
-- **Sample Efficiency**: Achieves comparable performance with 40% fewer generated environments
-- **Transfer Performance**: Improves zero-shot transfer success rate by 15-20% on benchmark tasks
-- **Resource Utilization**: More effective use of computational budget through intelligent environment selection
-
-## 🏗️ Repository Structure
-
-```
-hierarchical-ued-gtm/
-├── ued_gtm/
-│   ├── agents/
-│   │   ├── teacher.py          # Teacher agent implementation
-│   │   └── student.py          # Student agent implementation
-│   ├── envs/
-│   │   ├── env_generator.py    # Environment generation utilities
-│   │   └── base_env.py         # Base environment class
-│   ├── models/
-│   │   ├── trajectory_model.py # Generative trajectory modeling
-│   │   └── networks.py         # Neural network architectures
-│   └── training/
-│       ├── hierarchical_trainer.py
-│       └── curriculum.py       # Curriculum generation logic
-├── experiments/
-│   ├── configs/               # Experiment configurations
-│   └── run_experiments.py     # Main experiment script
-├── tests/
-│   └── test_*.py             # Unit tests
-├── requirements.txt
-├── setup.py
-└── README.md
-```
 
 ## 🏃‍♂️ Run Commands
 
 ### 1. **Random Training**:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python train.py --seed 91 --num_budget 20 --num_udpates_per_env 50 --buffer_size 10000 --cv False --newMDP False --gamma 1 --domain_randomization True --accel False --cv False --num_env 2 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion False --num_eval_envs 10
+python train.py --seed 3407 --num_budget 20 --num_udpates_per_env 50 --buffer_size 10000 --cv False --newMDP False --gamma 1 --domain_randomization True --accel False --cv False --num_env 2 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion False --num_eval_envs 10
 ```
 
 ### 2. **Accel Training**:
 
 ```bash
-CUDA_VISIBLE_DEVICES=1 python train.py --seed 91 --num_budget 20 --num_udpates_per_env 50 --buffer_size 10000 --cv False --newMDP False --gamma 1 --domain_randomization False --accel True --cv False --num_env 2 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion False --num_eval_envs 10
+python train.py --seed 3407 --num_budget 20 --num_udpates_per_env 50 --buffer_size 10000 --cv False --newMDP False --gamma 1 --domain_randomization False --accel True --cv False --num_env 2 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion False --num_eval_envs 10
 ```
 
 ### 3. **New MDP Training**:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python train.py --seed 91 --num_budget 20 --num_udpates_per_env 50 --buffer_size 10000 --cv False --newMDP True --gamma 1 --domain_randomization False --accel False --cv False --num_env 5 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion False --num_eval_envs 10
+python train.py --seed 3407 --num_budget 20 --num_udpates_per_env 50 --buffer_size 10000 --cv False --newMDP True --gamma 1 --domain_randomization False --accel False --cv False --num_env 5 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion False --num_eval_envs 10
 ```
 
 ### 4. **Shed Training**:
 
 ```bash
-CUDA_VISIBLE_DEVICES=2 python train.py --seed 95 --num_budget 50 --num_udpates_per_env 20 --buffer_size 2048 --cv False --newMDP True --gamma 1 --domain_randomization False --accel False --cv False --num_env 5 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion True --num_eval_envs 10
+python train.py --seed 3407 --num_budget 20 --num_udpates_per_env 50 --buffer_size 2048 --cv False --newMDP True --gamma 1 --domain_randomization False --accel False --cv False --num_env 5 --diffusion_synth_buffer_size 900 --diffusion_lr 1e-3 --diffusion_max_state 200 --use_diffusion True --num_eval_envs 10
 ```
 
 ## 📖 Citation
